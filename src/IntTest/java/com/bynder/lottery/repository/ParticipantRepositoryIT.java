@@ -48,9 +48,6 @@ class ParticipantRepositoryIT extends BaseIT {
 
     Assertions.assertThat(result).isPresent();
 
-    Assertions.assertThat(result.get())
-        .usingRecursiveComparison()
-        .ignoringFields("id")
-        .isEqualTo(participant);
+    Assertions.assertThat(result.get()).usingRecursiveComparison().isEqualTo(saved);
   }
 }

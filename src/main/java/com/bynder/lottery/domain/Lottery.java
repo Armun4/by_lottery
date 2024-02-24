@@ -1,7 +1,6 @@
 package com.bynder.lottery.domain;
 
-import com.bynder.lottery.entity.LotteryEntity;
-import jakarta.persistence.*;
+import com.bynder.lottery.repository.entity.LotteryEntity;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +19,11 @@ public class Lottery {
   @Builder.Default private Boolean finished = false;
 
   public LotteryEntity toEntity() {
-    return LotteryEntity.builder().id(id).endTime(endTime).startTime(startTime).finished(finished).build();
+    return LotteryEntity.builder()
+        .id(id)
+        .endTime(endTime)
+        .startTime(startTime)
+        .finished(finished)
+        .build();
   }
 }

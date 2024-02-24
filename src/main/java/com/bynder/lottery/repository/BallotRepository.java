@@ -1,7 +1,7 @@
 package com.bynder.lottery.repository;
 
 import com.bynder.lottery.domain.Ballot;
-import com.bynder.lottery.entity.BallotEntity;
+import com.bynder.lottery.repository.entity.BallotEntity;
 import com.bynder.lottery.repository.jpa.BallotJpaRepository;
 import java.util.List;
 import java.util.stream.Collectors;

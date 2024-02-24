@@ -3,8 +3,6 @@ package com.bynder.lottery.repository;
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.util.LotteryArbitraryProvider;
-
-import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -61,9 +59,7 @@ class LotteryRepositoryIT extends BaseIT {
             .finished(false)
             .build();
 
-      Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5,ChronoUnit.HOURS));
-
-
+    Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
 
     lotteryRepository.save(alreadyClosed);
     Lottery savedCurrent = lotteryRepository.save(currentLottery);
@@ -71,6 +67,8 @@ class LotteryRepositoryIT extends BaseIT {
     Optional<Lottery> retrievedCurrent = lotteryRepository.getCurrentLottery();
 
     Assertions.assertThat(retrievedCurrent).isPresent();
-    Assertions.assertThat(retrievedCurrent.get()).usingRecursiveComparison().isEqualTo(savedCurrent);
+    Assertions.assertThat(retrievedCurrent.get())
+        .usingRecursiveComparison()
+        .isEqualTo(savedCurrent);
   }
 }

@@ -1,7 +1,7 @@
 package com.bynder.lottery.repository;
 
 import com.bynder.lottery.domain.Lottery;
-import com.bynder.lottery.entity.LotteryEntity;
+import com.bynder.lottery.repository.entity.LotteryEntity;
 import com.bynder.lottery.repository.jpa.LotteryJpaRepository;
 import java.time.Clock;
 import java.time.Instant;
@@ -23,10 +23,6 @@ public class LotteryRepository {
   Optional<Lottery> getCurrentLottery() {
     Instant now = clock.instant();
 
-
-    
-    return lotteryJpaRepository
-        .findLastUnfinishedLottery(now)
-        .map(LotteryEntity::toDomain);
+    return lotteryJpaRepository.findLastUnfinishedLottery(now).map(LotteryEntity::toDomain);
   }
 }

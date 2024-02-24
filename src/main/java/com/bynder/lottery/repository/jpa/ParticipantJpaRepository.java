@@ -1,6 +1,6 @@
 package com.bynder.lottery.repository.jpa;
 
-import com.bynder.lottery.entity.ParticipantEntity;
+import com.bynder.lottery.repository.entity.ParticipantEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

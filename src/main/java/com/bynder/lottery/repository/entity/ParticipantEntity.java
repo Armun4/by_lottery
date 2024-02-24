@@ -1,4 +1,4 @@
-package com.bynder.lottery.entity;
+package com.bynder.lottery.repository.entity;
 
 import com.bynder.lottery.domain.Participant;
 import jakarta.persistence.*;
@@ -19,7 +19,10 @@ public class ParticipantEntity {
   @Column(nullable = false)
   private String name;
 
+  @Column(nullable = false)
+  private String email;
+
   public Participant toDomain() {
-    return Participant.builder().id(id).name(name).build();
+    return Participant.builder().id(id).name(name).email(email).build();
   }
 }

@@ -1,4 +1,4 @@
-package com.bynder.lottery.entity;
+package com.bynder.lottery.repository.entity;
 
 import com.bynder.lottery.domain.Lottery;
 import jakarta.persistence.*;
@@ -24,6 +24,11 @@ public class LotteryEntity {
   private boolean finished;
 
   public Lottery toDomain() {
-    return Lottery.builder().endTime(endTime).startTime(startTime).id(id).finished(finished).build();
+    return Lottery.builder()
+        .endTime(endTime)
+        .startTime(startTime)
+        .id(id)
+        .finished(finished)
+        .build();
   }
 }

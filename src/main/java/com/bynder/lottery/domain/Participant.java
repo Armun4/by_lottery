@@ -1,7 +1,6 @@
 package com.bynder.lottery.domain;
 
-import com.bynder.lottery.entity.ParticipantEntity;
-import jakarta.persistence.*;
+import com.bynder.lottery.repository.entity.ParticipantEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,8 +12,9 @@ public class Participant {
   @Builder.Default private Long id = null;
 
   private String name;
+  private String email;
 
   public ParticipantEntity toEntity() {
-    return ParticipantEntity.builder().id(id).name(name).build();
+    return ParticipantEntity.builder().id(id).name(name).email(email).build();
   }
 }

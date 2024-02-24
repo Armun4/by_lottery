@@ -1,6 +1,6 @@
 package com.bynder.lottery.repository.jpa;
 
-import com.bynder.lottery.entity.LotteryEntity;
+import com.bynder.lottery.repository.entity.LotteryEntity;
 import java.time.Instant;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

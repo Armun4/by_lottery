@@ -21,5 +21,6 @@ CREATE TABLE lotteries (
 
 CREATE TABLE participant (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
 );

@@ -1,4 +1,4 @@
-package com.bynder.lottery.entity;
+package com.bynder.lottery.repository.entity;
 
 import com.bynder.lottery.domain.Ballot;
 import jakarta.persistence.*;

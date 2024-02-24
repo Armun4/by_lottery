@@ -18,10 +18,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseIT {
 
-  @LocalServerPort Integer port;
+  @LocalServerPort public Integer port;
 
-  @Autowired
-  public Clock clock = Mockito.mock(Clock.class);;
+  @Autowired public Clock clock = Mockito.mock(Clock.class);
+  ;
 
   @Autowired List<JpaRepository<?, ?>> jpaRepositories;
 
