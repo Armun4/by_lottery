@@ -2,24 +2,16 @@ package com.bynder.lottery.repository;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Ballot;
-import com.bynder.lottery.repository.jpa.BallotJpaRepository;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import java.util.List;
 import net.jqwik.api.Arbitraries;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BallotRepositoryIT extends BaseIT {
 
-  @Autowired BallotJpaRepository ballotJpaRepository;
   @Autowired BallotRepository ballotRepository;
-
-  @BeforeEach
-  void setUp() {
-    ballotJpaRepository.deleteAll();
-  }
 
   @Test
   void IdsAssignedByDb() {

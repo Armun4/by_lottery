@@ -17,7 +17,9 @@ public class Lottery {
 
   private Instant endTime;
 
-  LotteryEntity toEntity() {
-    return LotteryEntity.builder().id(id).endTime(endTime).startTime(startTime).build();
+  @Builder.Default private Boolean finished = false;
+
+  public LotteryEntity toEntity() {
+    return LotteryEntity.builder().id(id).endTime(endTime).startTime(startTime).finished(finished).build();
   }
 }

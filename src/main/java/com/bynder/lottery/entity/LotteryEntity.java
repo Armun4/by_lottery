@@ -15,13 +15,15 @@ public class LotteryEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   private Instant startTime;
 
   private Instant endTime;
 
-  Lottery toDomain() {
-    return Lottery.builder().endTime(endTime).startTime(startTime).id(id).build();
+  private boolean finished;
+
+  public Lottery toDomain() {
+    return Lottery.builder().endTime(endTime).startTime(startTime).id(id).finished(finished).build();
   }
 }

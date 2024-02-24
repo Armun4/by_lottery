@@ -15,7 +15,8 @@ CREATE TABLE ballots (
 CREATE TABLE lotteries (
     id SERIAL PRIMARY KEY,
     start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP
+    end_time TIMESTAMP,
+    finished BOOLEAN
 );
 
 CREATE TABLE participant (

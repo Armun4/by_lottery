@@ -2,12 +2,15 @@ package com.bynder.lottery;
 
 import io.restassured.RestAssured;
 import java.time.Clock;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -17,7 +20,10 @@ public class BaseIT {
 
   @LocalServerPort Integer port;
 
-  @MockBean Clock clock;
+  @Autowired
+  public Clock clock = Mockito.mock(Clock.class);;
+
+  @Autowired List<JpaRepository<?, ?>> jpaRepositories;
 
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine");
 
@@ -33,6 +39,7 @@ public class BaseIT {
 
   @BeforeEach
   void beforeEach() {
+    jpaRepositories.forEach(JpaRepository::deleteAll);
 
     RestAssured.baseURI = "http://localhost:" + port;
   }
