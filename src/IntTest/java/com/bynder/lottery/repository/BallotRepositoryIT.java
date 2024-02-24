@@ -26,6 +26,11 @@ public class BallotRepositoryIT extends BaseIT {
 
     List<Ballot> ballots = getBallots();
 
+    ballots.forEach(
+        ballot -> {
+          Assertions.assertThat(ballot.getId()).isNull();
+        });
+
     List<Ballot> result = ballotRepository.saveAll(ballots);
 
     result.forEach(
@@ -35,7 +40,7 @@ public class BallotRepositoryIT extends BaseIT {
   }
 
   @Test
-  void a() {
+  void canGetAllByLotteryId() {
     long lotteryId = Arbitraries.longs().sample();
 
     List<Ballot> ballots = getBallotsForLottery(lotteryId);

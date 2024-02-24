@@ -1,20 +1,20 @@
 package com.bynder.lottery.domain;
 
+import com.bynder.lottery.entity.ParticipantEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Setter;
+import lombok.Getter;
 
 @Builder
-@Setter
+@Getter
 public class Participant {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  // actual id will be set by the db
+  @Builder.Default private Long id = null;
 
-  @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false, unique = true)
-  private String email;
+  public ParticipantEntity toEntity() {
+    return ParticipantEntity.builder().id(id).name(name).build();
+  }
 }

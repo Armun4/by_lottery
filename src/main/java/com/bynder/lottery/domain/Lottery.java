@@ -1,8 +1,8 @@
 package com.bynder.lottery.domain;
 
+import com.bynder.lottery.entity.LotteryEntity;
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,10 +10,14 @@ import lombok.Getter;
 @Getter
 public class Lottery {
 
-  private long id;
-  private List<Long> ballotIds;
+  // actual id will be set by the db
+  @Builder.Default private Long id = null;
 
   private Instant startTime;
 
   private Instant endTime;
+
+  LotteryEntity toEntity() {
+    return LotteryEntity.builder().id(id).endTime(endTime).startTime(startTime).build();
+  }
 }

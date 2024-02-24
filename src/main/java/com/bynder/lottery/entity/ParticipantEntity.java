@@ -1,5 +1,6 @@
 package com.bynder.lottery.entity;
 
+import com.bynder.lottery.domain.Participant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,11 +14,12 @@ public class ParticipantEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false, unique = true)
-  private String email;
+  public Participant toDomain() {
+    return Participant.builder().id(id).name(name).build();
+  }
 }

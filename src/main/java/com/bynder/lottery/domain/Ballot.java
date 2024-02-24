@@ -3,11 +3,9 @@ package com.bynder.lottery.domain;
 import com.bynder.lottery.entity.BallotEntity;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Builder
 @Getter
-@Setter
 public class Ballot {
 
   // actual id will be set by the db

@@ -20,7 +20,6 @@ public class BallotEntity {
   private long lotteryId;
 
   public Ballot toDomain() {
-
     return Ballot.builder().id(id).participantId(participantId).lotteryId(lotteryId).build();
   }
 }

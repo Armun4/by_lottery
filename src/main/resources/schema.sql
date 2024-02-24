@@ -11,3 +11,14 @@ CREATE TABLE ballots (
     participant_id BIGINT NOT NULL,
     lottery_id BIGINT NOT NULL
 );
+
+CREATE TABLE lotteries (
+    id SERIAL PRIMARY KEY,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP
+);
+
+CREATE TABLE participant (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
