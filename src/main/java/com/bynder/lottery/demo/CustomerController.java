@@ -1,4 +1,4 @@
-package com.testcontainers.demo;
+package com.bynder.lottery.demo;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;

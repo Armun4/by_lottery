@@ -1,4 +1,4 @@
-package com.testcontainers.demo;
+package com.bynder.lottery.demo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

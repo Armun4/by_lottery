@@ -1,12 +1,12 @@
-package com.testcontainers.demo;
+package com.bynder.lottery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootRestApiTestingGuideApplication {
+public class BynderLottery {
 
   public static void main(String[] args) {
-    SpringApplication.run(SpringBootRestApiTestingGuideApplication.class, args);
+    SpringApplication.run(BynderLottery.class, args);
   }
 }

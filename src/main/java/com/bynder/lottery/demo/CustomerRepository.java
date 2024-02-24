@@ -1,4 +1,4 @@
-package com.testcontainers.demo;
+package com.bynder.lottery.demo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

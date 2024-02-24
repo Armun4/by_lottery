@@ -5,7 +5,7 @@ plugins {
     id 'com.diffplug.spotless' version "6.23.0"
 }
 
-group = 'com.testcontainers'
+group = 'com.bynder.lottery'
 version = '1.0.0-SNAPSHOT'
 
 java {
@@ -31,6 +31,9 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'io.rest-assured:rest-assured'
+
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
 tasks.named('test') {
@@ -42,17 +45,58 @@ tasks.named('test') {
     }
 }
 
-spotless {
-    java {
-        importOrder()
-        removeUnusedImports()
-        prettier(['prettier': '3.0.3', 'prettier-plugin-java': '2.3.0'])
-            .config([
-                'parser': 'java',
-                'tabWidth': 2,
-                'printWidth': 80,
-                'plugins': ['prettier-plugin-java']
-            ])
-        formatAnnotations()
+sourceSets {
+    intTest {
+        java {
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+        }
     }
 }
+
+
+task intTest(type: Test) {
+    group = "verification"
+    testClassesDirs = sourceSets.intTest.output.classesDirs
+    classpath = sourceSets.intTest.runtimeClasspath
+}
+
+tasks.named('intTest') {
+    useJUnitPlatform()
+    testLogging {
+        events = ["PASSED", "FAILED", "SKIPPED"]
+        showStandardStreams = true
+        exceptionFormat = "full"
+    }
+}
+
+tasks.check.dependsOn(intTest)
+
+spotless {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+
+    format("misc") {
+        target(
+                ".gitignore",
+                ".gitattributes",
+                ".gitconfig",
+                ".editorconfig",
+                "*.md",
+                "src/**/*.md",
+                "*.sh",
+                "src/**/*.properties"
+        )
+        indentWithSpaces()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+
