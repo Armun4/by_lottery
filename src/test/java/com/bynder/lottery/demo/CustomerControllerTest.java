@@ -1,10 +1,8 @@
-package com.bynder.lottery;
+package com.bynder.lottery.demo;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
 
-import com.bynder.lottery.demo.Customer;
-import com.bynder.lottery.demo.CustomerRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;

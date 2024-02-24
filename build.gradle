@@ -31,6 +31,9 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'net.jqwik:jqwik:1.8.2'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'

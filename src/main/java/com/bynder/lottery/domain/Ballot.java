@@ -3,16 +3,19 @@ package com.bynder.lottery.domain;
 import com.bynder.lottery.entity.BallotEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
+@Setter
 public class Ballot {
 
-  private Long id;
+  // actual id will be set by the db
+  @Builder.Default private Long id = null;
 
-  private Long participantId;
+  private long participantId;
 
-  private Long lotteryId;
+  private long lotteryId;
 
   public BallotEntity toEntity() {
     return BallotEntity.builder().id(id).participantId(participantId).lotteryId(lotteryId).build();

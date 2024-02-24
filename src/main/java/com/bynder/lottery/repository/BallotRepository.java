@@ -16,9 +16,11 @@ public class BallotRepository {
 
   List<Ballot> saveAll(List<Ballot> ballots) {
     List<BallotEntity> entities =
-        jpaRepository.saveAll(ballots.stream().map(Ballot::toEntity).collect(Collectors.toList()));
+        ballots.stream().map(Ballot::toEntity).collect(Collectors.toList());
 
-    return entities.stream().map(BallotEntity::toDomain).collect(Collectors.toList());
+    var result = jpaRepository.saveAll(entities);
+
+    return result.stream().map(BallotEntity::toDomain).collect(Collectors.toList());
   }
 
   List<Ballot> findAllByLotteryId(long lotteryId) {

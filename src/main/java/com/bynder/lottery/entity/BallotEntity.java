@@ -9,19 +9,18 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "participant")
+@Table(name = "ballots")
 public class BallotEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
-  private Long participantId;
+  private long participantId;
 
-  private Long lotteryId;
+  private long lotteryId;
 
   public Ballot toDomain() {
 
-    return Ballot.builder().lotteryId(id).participantId(participantId).lotteryId(lotteryId).build();
+    return Ballot.builder().id(id).participantId(participantId).lotteryId(lotteryId).build();
   }
 }
