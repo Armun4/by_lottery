@@ -1,6 +1,8 @@
 package com.bynder.lottery.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Ballot;
@@ -18,7 +20,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class BallotControllerIT extends BaseIT {
@@ -53,9 +54,9 @@ public class BallotControllerIT extends BaseIT {
             .participantId(savedParticipant.getId())
             .build();
 
-    Mockito.when(clock.instant())
+    when(clock.instant())
         .thenReturn(Instant.parse("2024-01-24T00:00:00Z").plus(5, ChronoUnit.HOURS));
-    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
     Class<Ballot> ballotClass = Ballot.class;
 
@@ -76,7 +77,7 @@ public class BallotControllerIT extends BaseIT {
 
     result.forEach(
         savedBallot -> {
-          Assertions.assertThat(savedBallot)
+          assertThat(savedBallot)
               .usingRecursiveComparison()
               .ignoringFields("id")
               .isEqualTo(expected);
@@ -105,7 +106,7 @@ public class BallotControllerIT extends BaseIT {
             }""";
     String result = getResultAsString(request, 400);
 
-    Assertions.assertThat(result).isEqualTo("Invalid request, amount not set.");
+    assertThat(result).isEqualTo("Invalid request, amount not set.");
   }
 
   @Test
@@ -120,7 +121,7 @@ public class BallotControllerIT extends BaseIT {
 
     String result = getResultAsString(request, 400);
 
-    Assertions.assertThat(result).isEqualTo("Invalid request, amount has to be more than 0");
+    assertThat(result).isEqualTo("Invalid request, amount has to be more than 0");
   }
 
   @Test
@@ -135,7 +136,7 @@ public class BallotControllerIT extends BaseIT {
 
     String result = getResultAsString(request, 400);
 
-    Assertions.assertThat(result).isEqualTo("Participant not found, please register");
+    assertThat(result).isEqualTo("Participant not found, please register");
   }
 
   @Test
@@ -145,8 +146,8 @@ public class BallotControllerIT extends BaseIT {
     Participant savedParticipant = participantRepository.save(participant);
     Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
 
-    Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
-    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
+    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
     String request =
         "{\n"
@@ -158,7 +159,7 @@ public class BallotControllerIT extends BaseIT {
 
     String result = getResultAsString(request, 500);
 
-    Assertions.assertThat(result).isEqualTo("No current lottery found. Please check again later.");
+    assertThat(result).isEqualTo("No current lottery found. Please check again later.");
   }
 
   private String getResultAsString(String request, int code) {

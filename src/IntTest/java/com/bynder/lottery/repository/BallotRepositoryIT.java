@@ -1,12 +1,13 @@
 package com.bynder.lottery.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.repository.jpa.BallotJpaRepository;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import java.util.List;
 import net.jqwik.api.Arbitraries;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,14 +24,14 @@ public class BallotRepositoryIT extends BaseIT {
 
     ballots.forEach(
         ballot -> {
-          Assertions.assertThat(ballot.getId()).isNull();
+          assertThat(ballot.getId()).isNull();
         });
 
     List<Ballot> result = ballotRepository.saveAll(ballots);
 
     result.forEach(
         ballot -> {
-          Assertions.assertThat(ballot.getId()).isNotNull();
+          assertThat(ballot.getId()).isNotNull();
         });
   }
 
@@ -46,7 +47,7 @@ public class BallotRepositoryIT extends BaseIT {
 
     result.forEach(
         ballot -> {
-          Assertions.assertThat(ballot.getLotteryId()).isEqualTo(lotteryId);
+          assertThat(ballot.getLotteryId()).isEqualTo(lotteryId);
         });
   }
 
