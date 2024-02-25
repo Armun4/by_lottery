@@ -19,6 +19,6 @@ public class Lottery {
   @Builder.Default private Boolean finished = false;
 
   public LotteryEntity toEntity() {
-    return LotteryEntity.builder().id(id).date(date).build();
+    return LotteryEntity.builder().id(id).date(date).finished(finished).build();
   }
 }

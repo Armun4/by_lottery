@@ -22,7 +22,7 @@ public class LotteryRepository {
   }
 
   public Optional<Lottery> getCurrentLottery() {
-    // Task runs at 00:00, minus 10 mins to make sure it picks up the current lottery even tho is
+    // Task runs at 00:00, minus 5 minutes to make sure it picks up the current lottery even tho is
     // already the next day
     LocalDate today =
         LocalDate.ofInstant(clock.instant().minus(10, ChronoUnit.MINUTES), clock.getZone());

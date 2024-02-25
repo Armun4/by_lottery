@@ -1,10 +1,11 @@
 package com.bynder.lottery.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.WinnerBallot;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,8 +18,7 @@ public class WinnerBallotRepositoryIT extends BaseIT {
     List<WinnerBallot> winnerBallots =
         BallotArbitrarityProvider.arbitraryWinnerBallots()
             .list()
-            .ofMinSize(2)
-            .ofMaxSize(10)
+                .ofSize(10)
             .sample();
 
     winnerBallots.forEach(
@@ -31,7 +31,7 @@ public class WinnerBallotRepositoryIT extends BaseIT {
           WinnerBallot result =
               jpaRepository.getWinnerBallotOfDate(winnerBallot.getWinningDate()).get();
 
-          Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(winnerBallot);
+          assertThat(result).usingRecursiveComparison().isEqualTo(winnerBallot);
         });
   }
 }

@@ -1,5 +1,7 @@
 package com.bynder.lottery.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.repository.jpa.LotteryJpaRepository;
@@ -10,7 +12,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ class LotteryRepositoryIT extends BaseIT {
 
     lotteries.forEach(
         participant -> {
-          Assertions.assertThat(participant.getId()).isNull();
+          assertThat(participant.getId()).isNull();
         });
 
     List<Lottery> saved =
@@ -42,7 +43,7 @@ class LotteryRepositoryIT extends BaseIT {
 
     saved.forEach(
         participant -> {
-          Assertions.assertThat(participant.getId()).isNotNull();
+          assertThat(participant.getId()).isNotNull();
         });
   }
 
@@ -66,9 +67,7 @@ class LotteryRepositoryIT extends BaseIT {
 
     Optional<Lottery> retrievedCurrent = lotteryRepository.getCurrentLottery();
 
-    Assertions.assertThat(retrievedCurrent).isPresent();
-    Assertions.assertThat(retrievedCurrent.get())
-        .usingRecursiveComparison()
-        .isEqualTo(savedCurrent);
+    assertThat(retrievedCurrent).isPresent();
+    assertThat(retrievedCurrent.get()).usingRecursiveComparison().isEqualTo(savedCurrent);
   }
 }

@@ -5,6 +5,7 @@ import static net.jqwik.time.api.Dates.dates;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.domain.WinnerBallot;
 import java.time.LocalDate;
+import java.util.List;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
@@ -38,21 +39,33 @@ public class BallotArbitrarityProvider {
   }
 
   public static Arbitrary<WinnerBallot> arbitraryWinnerBallots() {
-    Arbitrary<Long> participantIds = Arbitraries.longs().between(1, 1000);
-    Arbitrary<Long> lotteryIds = Arbitraries.longs().between(1, 1000);
-    Arbitrary<Long> ballotIds = Arbitraries.longs().between(1, 1000);
-    Arbitrary<String> names = Arbitraries.strings();
+    Arbitrary<Long> participantIds = Arbitraries.longs().between(1, 100);
+    Arbitrary<Long> lotteryIds = Arbitraries.longs().between(1, 100);
+    Arbitrary<Long> ballotIds = Arbitraries.longs().between(1, 100);
+    Arbitrary<String> names = Arbitraries.strings().alpha().ofMinLength(1).ofMaxLength(25);
     Arbitrary<LocalDate> dates = dates().atTheEarliest(LocalDate.of(2010, 1, 1));
 
     return Combinators.combine(participantIds, lotteryIds, ballotIds, dates, names)
-        .as(
-            (participantId, lotteryId, ballotId, date, name) ->
-                WinnerBallot.builder()
-                    .ballotId(ballotId)
-                    .participantId(participantId)
-                    .lotteryId(lotteryId)
-                    .winningDate(date)
-                    .participantName(name)
-                    .build());
+            .as((participantId, lotteryId, ballotId, date, name) ->
+                    WinnerBallot.builder()
+                            .ballotId(ballotId)
+                            .participantId(participantId)
+                            .lotteryId(lotteryId)
+                            .winningDate(date)
+                            .participantName(name)
+                            .build());
+  }
+
+  public static Arbitrary<Ballot> arbitraryBallotsForLotteryAndSetOfUsers(
+      long lotteryId, List<Long> particpants) {
+    Arbitrary<Long> participantIds = Arbitraries.of(particpants);
+
+    return participantIds.map(
+        participantId ->
+            Ballot.builder()
+                .id(null)
+                .participantId(participantId)
+                .lotteryId(lotteryId) // Use provided lotteryId
+                .build());
   }
 }
