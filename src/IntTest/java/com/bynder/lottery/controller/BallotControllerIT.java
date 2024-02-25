@@ -122,8 +122,6 @@ public class BallotControllerIT extends BaseIT {
     Assertions.assertThat(result).isEqualTo("Participant not found, please register");
   }
 
-
-
   @Test
   void shouldThrow500ifLotteryNotFound() {
 
