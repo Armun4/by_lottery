@@ -17,7 +17,7 @@ public class ParticipantController {
 
   private final ParticipantService participantService;
 
-  @PostMapping("/v1/participant/save")
+  @PostMapping("/v1/participant/register")
   ResponseEntity<Participant> saveParticipant(@RequestBody ParticipantRequest request) {
     validateRequest(request);
 

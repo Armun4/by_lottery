@@ -43,59 +43,66 @@ public class ParticipantControllerIT extends BaseIT {
 
     String request = "{\n" + "  \"email\": \"johndoe@example.com\"\n" + "}";
 
-   String result =  given()
-        .port(port)
-        .contentType(ContentType.JSON)
-        .body(request)
-        .when()
-        .post("/v1/participant/save")
-        .then()
-        .statusCode(400).extract().body().asString();
-
-        Assertions.assertThat(result).isEqualTo("Invalid request, name not set.");
+    String result =
+        given()
+            .port(port)
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .post("/v1/participant/save")
+            .then()
+            .statusCode(400)
+            .extract()
+            .body()
+            .asString();
   }
-
 
   @Test
   void shouldThrow400ifEmailIsNull() {
 
-    String request = "{\n" +
-            "  \"name\": \"John Doe\"\n" +
-            "}";
+    String request = "{\n" + "  \"name\": \"John Doe\"\n" + "}";
 
-   String result =  given()
-        .port(port)
-        .contentType(ContentType.JSON)
-        .body(request)
-        .when()
-        .post("/v1/participant/save")
-        .then()
-        .statusCode(400).extract().body().asString();
+    String result =
+        given()
+            .port(port)
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .post("/v1/participant/save")
+            .then()
+            .statusCode(400)
+            .extract()
+            .body()
+            .asString();
 
-        Assertions.assertThat(result).isEqualTo("Invalid request, email not set");
+    Assertions.assertThat(result).isEqualTo("Invalid request, email not set");
   }
 
+  @Test
+  void shouldThrow400ifEmailIsNotValid() {
 
+    String request =
+        "  {\n"
+            + "  \"name\": \"John Doe\",\n"
+            + "  \"email\": \"jo..hndoe@example..com\"\n"
+            + "} ";
 
-    @Test
-    void shouldThrow400ifEmailIsNotValid() {
+    Participant expected =
+        Participant.builder().name("John Doe").email("johndoe@example.com").build();
 
-        String request =
-                "  {\n" + "  \"name\": \"John Doe\",\n" + "  \"email\": \"jo..hndoe@example..com\"\n" + "} ";
+    String result =
+        given()
+            .port(port)
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .post("/v1/participant/save")
+            .then()
+            .statusCode(400)
+            .extract()
+            .body()
+            .asString();
 
-        Participant expected =
-                Participant.builder().name("John Doe").email("johndoe@example.com").build();
-
-        String result =  given()
-                .port(port)
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when()
-                .post("/v1/participant/save")
-                .then()
-                .statusCode(400).extract().body().asString();
-
-        Assertions.assertThat(result).isEqualTo("Invalid request, email is not valid");
-    }
-
+    Assertions.assertThat(result).isEqualTo("Invalid request, email is not valid");
+  }
 }

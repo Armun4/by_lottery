@@ -16,11 +16,11 @@ public class LotteryRepository {
   private final LotteryJpaRepository lotteryJpaRepository;
   private final Clock clock;
 
-  Lottery save(Lottery lottery) {
+  public Lottery save(Lottery lottery) {
     return lotteryJpaRepository.save(lottery.toEntity()).toDomain();
   }
 
-  Optional<Lottery> getCurrentLottery() {
+  public Optional<Lottery> getCurrentLottery() {
     Instant now = clock.instant();
 
     return lotteryJpaRepository.findLastUnfinishedLottery(now).map(LotteryEntity::toDomain);

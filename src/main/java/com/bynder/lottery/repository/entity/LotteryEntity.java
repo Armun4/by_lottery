@@ -21,7 +21,7 @@ public class LotteryEntity {
 
   private Instant endTime;
 
-  private boolean finished;
+  private boolean finished = false;
 
   public Lottery toDomain() {
     return Lottery.builder()
