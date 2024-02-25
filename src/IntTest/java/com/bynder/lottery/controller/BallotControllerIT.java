@@ -17,24 +17,15 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public class BallotControllerIT extends BaseIT {
 
   @Autowired ParticipantRepository participantRepository;
 
   @Autowired LotteryRepository lotteryRepository;
-
-  @BeforeEach
-  void beforeEach() {
-    jpaRepositories.forEach(JpaRepository::deleteAll);
-  }
-
-  @Autowired List<JpaRepository<?, ?>> jpaRepositories;
 
   @Test
   void shouldBeAbleToCreateBallot() {

@@ -11,7 +11,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,6 @@ class LotteryRepositoryIT extends BaseIT {
   @Autowired LotteryRepository lotteryRepository;
 
   @Autowired LotteryJpaRepository jpaRepository;
-
-  @BeforeEach
-  void setUp() {
-    jpaRepository.deleteAll();
-  }
 
   @Test
   void IdsAssignedByDb() {
