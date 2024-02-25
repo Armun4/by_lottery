@@ -4,21 +4,11 @@ import static io.restassured.RestAssured.given;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Participant;
-import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ParticipantControllerIT extends BaseIT {
-
-  @Autowired ParticipantJpaRepository jpaRepository;
-
-  @BeforeEach
-  void setUp() {
-    jpaRepository.deleteAll();
-  }
 
   @Test
   void shouldBeAbleToSaveParticipant() {
