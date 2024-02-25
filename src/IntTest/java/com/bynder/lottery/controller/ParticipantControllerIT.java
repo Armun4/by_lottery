@@ -4,17 +4,31 @@ import static io.restassured.RestAssured.given;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Participant;
+import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ParticipantControllerIT extends BaseIT {
+
+  @Autowired ParticipantJpaRepository jpaRepository;
+
+  @BeforeEach
+  void setUp() {
+    jpaRepository.deleteAll();
+  }
 
   @Test
   void shouldBeAbleToSaveParticipant() {
 
     String request =
-        "  {\n" + "  \"name\": \"John Doe\",\n" + "  \"email\": \"johndoe@example.com\"\n" + "} ";
+        """
+                          {
+                          "name": "John Doe",
+                          "email": "johndoe@example.com"
+                        }\s""";
 
     Participant expected =
         Participant.builder().name("John Doe").email("johndoe@example.com").build();
@@ -25,7 +39,7 @@ public class ParticipantControllerIT extends BaseIT {
             .contentType(ContentType.JSON)
             .body(request)
             .when()
-            .post("/v1/participant/save")
+            .post("/v1/participant/register")
             .then()
             .statusCode(200)
             .extract()
@@ -41,39 +55,25 @@ public class ParticipantControllerIT extends BaseIT {
   @Test
   void shouldThrow400ifNameIsNull() {
 
-    String request = "{\n" + "  \"email\": \"johndoe@example.com\"\n" + "}";
+    String request =
+        """
+                        {
+                          "email": "johndoe@example.com"
+                        }""";
 
-    String result =
-        given()
-            .port(port)
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .post("/v1/participant/save")
-            .then()
-            .statusCode(400)
-            .extract()
-            .body()
-            .asString();
+    String result = getResultAsString(request);
   }
 
   @Test
   void shouldThrow400ifEmailIsNull() {
 
-    String request = "{\n" + "  \"name\": \"John Doe\"\n" + "}";
+    String request =
+        """
+                {
+                  "name": "John Doe"
+                }""";
 
-    String result =
-        given()
-            .port(port)
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .post("/v1/participant/save")
-            .then()
-            .statusCode(400)
-            .extract()
-            .body()
-            .asString();
+    String result = getResultAsString(request);
 
     Assertions.assertThat(result).isEqualTo("Invalid request, email not set");
   }
@@ -82,27 +82,31 @@ public class ParticipantControllerIT extends BaseIT {
   void shouldThrow400ifEmailIsNotValid() {
 
     String request =
-        "  {\n"
-            + "  \"name\": \"John Doe\",\n"
-            + "  \"email\": \"jo..hndoe@example..com\"\n"
-            + "} ";
+        """
+                          {
+                          "name": "John Doe",
+                          "email": "jo..hndoe@example..com"
+                        }\s""";
 
     Participant expected =
         Participant.builder().name("John Doe").email("johndoe@example.com").build();
 
-    String result =
-        given()
-            .port(port)
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .post("/v1/participant/save")
-            .then()
-            .statusCode(400)
-            .extract()
-            .body()
-            .asString();
+    String result = getResultAsString(request);
 
     Assertions.assertThat(result).isEqualTo("Invalid request, email is not valid");
+  }
+
+  private String getResultAsString(String request) {
+    return given()
+        .port(port)
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .post("/v1/participant/register")
+        .then()
+        .statusCode(400)
+        .extract()
+        .body()
+        .asString();
   }
 }
