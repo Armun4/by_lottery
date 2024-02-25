@@ -1,11 +1,11 @@
 package com.bynder.lottery.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Participant;
 import io.restassured.http.ContentType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class ParticipantControllerIT extends BaseIT {
@@ -36,10 +36,7 @@ public class ParticipantControllerIT extends BaseIT {
             .response()
             .as(Participant.class);
 
-    Assertions.assertThat(result)
-        .usingRecursiveComparison()
-        .ignoringFields("id")
-        .isEqualTo(expected);
+    assertThat(result).usingRecursiveComparison().ignoringFields("id").isEqualTo(expected);
   }
 
   @Test
@@ -65,7 +62,7 @@ public class ParticipantControllerIT extends BaseIT {
 
     String result = getResultAsString(request);
 
-    Assertions.assertThat(result).isEqualTo("Invalid request, email not set");
+    assertThat(result).isEqualTo("Invalid request, email not set");
   }
 
   @Test
@@ -83,7 +80,7 @@ public class ParticipantControllerIT extends BaseIT {
 
     String result = getResultAsString(request);
 
-    Assertions.assertThat(result).isEqualTo("Invalid request, email is not valid");
+    assertThat(result).isEqualTo("Invalid request, email is not valid");
   }
 
   private String getResultAsString(String request) {

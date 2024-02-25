@@ -16,9 +16,4 @@ public class ParticipantService {
     return participantRepository.save(participant);
   }
 
-  public Participant getParticipant(long id) {
-    return participantRepository
-        .get(id)
-        .orElseThrow(() -> new RuntimeException("Participant lottery found, please register"));
-  }
 }

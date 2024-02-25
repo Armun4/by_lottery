@@ -1,12 +1,13 @@
 package com.bynder.lottery.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Participant;
 import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import com.bynder.lottery.util.ParticipantArbitraryProvider;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +25,7 @@ class ParticipantRepositoryIT extends BaseIT {
 
     participants.forEach(
         participant -> {
-          Assertions.assertThat(participant.getId()).isNull();
+          assertThat(participant.getId()).isNull();
         });
 
     List<Participant> saved =
@@ -37,7 +38,7 @@ class ParticipantRepositoryIT extends BaseIT {
 
     saved.forEach(
         participant -> {
-          Assertions.assertThat(participant.getId()).isNotNull();
+          assertThat(participant.getId()).isNotNull();
         });
   }
 
@@ -49,8 +50,8 @@ class ParticipantRepositoryIT extends BaseIT {
 
     Optional<Participant> result = participantRepository.get(saved.getId());
 
-    Assertions.assertThat(result).isPresent();
+    assertThat(result).isPresent();
 
-    Assertions.assertThat(result.get()).usingRecursiveComparison().isEqualTo(saved);
+    assertThat(result.get()).usingRecursiveComparison().isEqualTo(saved);
   }
 }
