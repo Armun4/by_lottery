@@ -12,18 +12,29 @@ import com.bynder.lottery.util.ParticipantArbitraryProvider;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public class BallotControllerIT extends BaseIT {
 
   @Autowired ParticipantRepository participantRepository;
 
   @Autowired LotteryRepository lotteryRepository;
+
+  @BeforeEach
+  void beforeEach() {
+    jpaRepositories.forEach(JpaRepository::deleteAll);
+  }
+
+  @Autowired List<JpaRepository<?, ?>> jpaRepositories;
 
   @Test
   void shouldBeAbleToCreateBallot() {
@@ -38,14 +49,10 @@ public class BallotControllerIT extends BaseIT {
             + "  \"amount\": 5\n"
             + "}";
 
-    Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
+    LocalDate currentDate =
+        LocalDate.ofInstant(Instant.parse("2024-01-24T00:00:00Z"), ZoneOffset.UTC);
 
-    Lottery currentLottery =
-        Lottery.builder()
-            .startTime(currentStartTime)
-            .endTime(currentStartTime.plus(1, ChronoUnit.DAYS))
-            .finished(false)
-            .build();
+    Lottery currentLottery = Lottery.builder().date(currentDate).finished(false).build();
 
     Lottery savedLottery = lotteryRepository.save(currentLottery);
 
@@ -55,7 +62,9 @@ public class BallotControllerIT extends BaseIT {
             .participantId(savedParticipant.getId())
             .build();
 
-    Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
+    Mockito.when(clock.instant())
+        .thenReturn(Instant.parse("2024-01-24T00:00:00Z").plus(5, ChronoUnit.HOURS));
+    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
     Class<Ballot> ballotClass = Ballot.class;
 
@@ -86,9 +95,12 @@ public class BallotControllerIT extends BaseIT {
   @Test
   void shouldThrow400ifParticipantIdIsNull() {
 
-    String request = "{\n" + "  \"amount\": 5\n" + "}";
+    String request = """
+            {
+              "amount": 5
+            }""";
 
-    String result = getResult(request, 400);
+    String result = getResultAsString(request, 400);
 
     Assertions.assertThat(result).isEqualTo("Invalid request, participantId not set.");
   }
@@ -96,8 +108,11 @@ public class BallotControllerIT extends BaseIT {
   @Test
   void shouldThrow400ifAmountIsNull() {
 
-    String request = "{\n" + "  \"participantId\": 123456,\n" + "}";
-    String result = getResult(request, 400);
+    String request = """
+            {
+              "participantId": 123456
+            }""";
+    String result = getResultAsString(request, 400);
 
     Assertions.assertThat(result).isEqualTo("Invalid request, amount not set.");
   }
@@ -105,9 +120,14 @@ public class BallotControllerIT extends BaseIT {
   @Test
   void shouldThrow400ifAmountIs0() {
 
-    String request = "{\n" + "  \"participantId\": 123456,\n" + "  \"amount\": 0\n" + "}";
+    String request =
+        """
+            {
+              "participantId": 123456,
+              "amount": 0
+            }""";
 
-    String result = getResult(request, 400);
+    String result = getResultAsString(request, 400);
 
     Assertions.assertThat(result).isEqualTo("Invalid request, amount has to be more than 0");
   }
@@ -115,9 +135,14 @@ public class BallotControllerIT extends BaseIT {
   @Test
   void shouldThrow400ifUserNotFound() {
 
-    String request = "{\n" + "  \"participantId\": 123456,\n" + "  \"amount\": 2\n" + "}";
+    String request =
+        """
+            {
+              "participantId": 123456,
+              "amount": 2
+            }""";
 
-    String result = getResult(request, 400);
+    String result = getResultAsString(request, 400);
 
     Assertions.assertThat(result).isEqualTo("Participant not found, please register");
   }
@@ -127,15 +152,25 @@ public class BallotControllerIT extends BaseIT {
 
     Participant participant = ParticipantArbitraryProvider.arbitraryParticipants().sample();
     Participant savedParticipant = participantRepository.save(participant);
+    Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
 
-    String request = "{\n" + "  \"participantId\": 123456,\n" + "  \"amount\": 2\n" + "}";
+    Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
+    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
-    String result = getResult(request, 500);
+    String request =
+        "{\n"
+            + "  \"participantId\": "
+            + savedParticipant.getId()
+            + ",\n"
+            + "  \"amount\": 5\n"
+            + "}";
+
+    String result = getResultAsString(request, 500);
 
     Assertions.assertThat(result).isEqualTo("No current lottery found. Please check again later.");
   }
 
-  private String getResult(String request, int code) {
+  private String getResultAsString(String request, int code) {
     return given()
         .port(port)
         .contentType(ContentType.JSON)

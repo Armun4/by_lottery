@@ -2,7 +2,7 @@ package com.bynder.lottery.repository.entity;
 
 import com.bynder.lottery.domain.Lottery;
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.LocalDate;
 import lombok.*;
 
 @Getter
@@ -17,18 +17,11 @@ public class LotteryEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Instant startTime;
-
-  private Instant endTime;
+  private LocalDate date;
 
   private boolean finished = false;
 
   public Lottery toDomain() {
-    return Lottery.builder()
-        .endTime(endTime)
-        .startTime(startTime)
-        .id(id)
-        .finished(finished)
-        .build();
+    return Lottery.builder().date(date).id(id).finished(finished).build();
   }
 }

@@ -2,12 +2,16 @@ package com.bynder.lottery.repository;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.Lottery;
+import com.bynder.lottery.repository.jpa.LotteryJpaRepository;
 import com.bynder.lottery.util.LotteryArbitraryProvider;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 class LotteryRepositoryIT extends BaseIT {
 
   @Autowired LotteryRepository lotteryRepository;
+
+  @Autowired LotteryJpaRepository jpaRepository;
+
+  @BeforeEach
+  void setUp() {
+    jpaRepository.deleteAll();
+  }
 
   @Test
   void IdsAssignedByDb() {
@@ -43,23 +54,18 @@ class LotteryRepositoryIT extends BaseIT {
 
   @Test
   void canFetchLastOpenedLottery() {
-    Instant closedStartTime = Instant.parse("2024-01-23T00:00:00Z");
-    Instant closedEndTime = closedStartTime.plus(1, ChronoUnit.DAYS);
+    LocalDate closedStartTime =
+        LocalDate.ofInstant(Instant.parse("2024-01-23T00:00:00Z"), ZoneOffset.UTC);
+    Lottery alreadyClosed = Lottery.builder().date(closedStartTime).finished(true).build();
 
-    Lottery alreadyClosed =
-        Lottery.builder().startTime(closedStartTime).endTime(closedEndTime).finished(true).build();
+    LocalDate currentStartTime =
+        LocalDate.ofInstant(Instant.parse("2024-01-24T00:00:00Z"), ZoneOffset.UTC);
 
-    Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
-    Instant currentEndTime = currentStartTime.plus(1, ChronoUnit.DAYS);
+    Lottery currentLottery = Lottery.builder().date(currentStartTime).finished(false).build();
 
-    Lottery currentLottery =
-        Lottery.builder()
-            .startTime(currentStartTime)
-            .endTime(currentEndTime)
-            .finished(false)
-            .build();
-
-    Mockito.when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
+    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    Mockito.when(clock.instant())
+        .thenReturn(Instant.parse("2024-01-24T00:00:00Z").plus(5, ChronoUnit.HOURS));
 
     lotteryRepository.save(alreadyClosed);
     Lottery savedCurrent = lotteryRepository.save(currentLottery);

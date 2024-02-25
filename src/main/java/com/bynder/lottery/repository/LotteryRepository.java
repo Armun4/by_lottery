@@ -4,7 +4,8 @@ import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.repository.entity.LotteryEntity;
 import com.bynder.lottery.repository.jpa.LotteryJpaRepository;
 import java.time.Clock;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,11 @@ public class LotteryRepository {
   }
 
   public Optional<Lottery> getCurrentLottery() {
-    Instant now = clock.instant();
+    // Task runs at 00:00, minus 10 mins to make sure it picks up the current lottery even tho is
+    // already the next day
+    LocalDate today =
+        LocalDate.ofInstant(clock.instant().minus(10, ChronoUnit.MINUTES), clock.getZone());
 
-    return lotteryJpaRepository.findLastUnfinishedLottery(now).map(LotteryEntity::toDomain);
+    return lotteryJpaRepository.findCurrentLottery(today).map(LotteryEntity::toDomain);
   }
 }
