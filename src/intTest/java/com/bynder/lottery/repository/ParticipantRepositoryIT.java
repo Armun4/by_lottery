@@ -8,6 +8,7 @@ import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import com.bynder.lottery.util.ParticipantArbitraryProvider;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,11 @@ class ParticipantRepositoryIT extends BaseIT {
   @Autowired ParticipantRepository participantRepository;
 
   @Autowired ParticipantJpaRepository jpaRepository;
+
+  @BeforeEach
+  void cleanDb() {
+    jpaRepository.deleteAll();
+  }
 
   @Test
   void IdsAssignedByDb() {

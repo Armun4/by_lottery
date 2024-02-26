@@ -9,7 +9,7 @@ import net.jqwik.api.Combinators;
 public class ParticipantArbitraryProvider {
 
   public static Arbitrary<Participant> arbitraryParticipants() {
-    Arbitrary<String> names = Arbitraries.strings().alpha().ofMaxLength(10);
+    Arbitrary<String> names = Arbitraries.strings().alpha().ofMinLength(3).ofMaxLength(10);
 
     Arbitrary<String> emails =
         Arbitraries.of(List.of("hola@gmail.com", "bynder@gmial.com", "lottery@gmail.com"));

@@ -8,6 +8,7 @@ import com.bynder.lottery.repository.jpa.BallotJpaRepository;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import java.util.List;
 import net.jqwik.api.Arbitraries;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,11 @@ public class BallotRepositoryIT extends BaseIT {
   @Autowired BallotRepository ballotRepository;
 
   @Autowired BallotJpaRepository jpaRepository;
+
+  @BeforeEach
+  void cleanDb() {
+    jpaRepository.deleteAll();
+  }
 
   @Test
   void IdsAssignedByDb() {

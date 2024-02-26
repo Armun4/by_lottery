@@ -6,10 +6,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.controller.Response.ParticipantResponse;
 import com.bynder.lottery.domain.Participant;
+import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ParticipantControllerIT extends BaseIT {
+
+  @Autowired ParticipantJpaRepository jpaRepository;
+
+  @BeforeEach
+  void cleanDb() {
+    jpaRepository.deleteAll();
+  }
 
   @Test
   void shouldBeAbleToSaveParticipant() {

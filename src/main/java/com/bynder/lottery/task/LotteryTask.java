@@ -23,9 +23,10 @@ public class LotteryTask {
   private final ParticipantRepository participantRepository;
 
   @Scheduled(cron = "0 0 0 * * *")
-  void runTask() {
+  public void runTask() {
 
     Lottery currentLottery = lotteryService.getLotteryAtMidnight();
+
     lotteryService.closeCurrentAndCreateNext(currentLottery);
 
     List<Ballot> ballots = ballotService.getAllBallotsForLottery(currentLottery.getId());

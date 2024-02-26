@@ -35,11 +35,11 @@ public class BallotService {
                 () -> new NoSuchElementException("Participant not found, please register"));
 
     LocalDate now = LocalDate.now(clock);
+
     Lottery currentLottery =
         lotteryRepository
             .getCurrentLottery(now)
-            .orElseThrow(
-                () -> new RuntimeException("No current lottery found. Please check again later."));
+            .orElseGet(() -> createLotteryIfNoCurrenLottery(now));
 
     List<Ballot> ballots =
         Stream.generate(
@@ -66,5 +66,10 @@ public class BallotService {
     return winnerBallotRepository
         .getWinnerBallotOfDate(localDate)
         .orElseThrow(() -> new NoResultException("Winner ballot not found for given date"));
+  }
+
+  private Lottery createLotteryIfNoCurrenLottery(LocalDate now) {
+    Lottery newLottery = Lottery.builder().date(now).finished(false).build();
+    return lotteryRepository.save(newLottery);
   }
 }
