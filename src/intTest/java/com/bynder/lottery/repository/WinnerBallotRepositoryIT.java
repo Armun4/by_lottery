@@ -6,7 +6,6 @@ import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.domain.WinnerBallot;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import java.util.Optional;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

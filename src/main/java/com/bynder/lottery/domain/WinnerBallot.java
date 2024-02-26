@@ -1,5 +1,6 @@
 package com.bynder.lottery.domain;
 
+import com.bynder.lottery.controller.Response.WinnerBallotResponse;
 import com.bynder.lottery.repository.entity.WinnerBallotEntity;
 import java.time.LocalDate;
 import lombok.Builder;
@@ -21,6 +22,16 @@ public class WinnerBallot {
 
   public WinnerBallotEntity toEntity() {
     return WinnerBallotEntity.builder()
+        .ballotId(ballotId)
+        .participantId(participantId)
+        .lotteryId(lotteryId)
+        .participantName(participantName)
+        .winningDate(winningDate)
+        .build();
+  }
+
+  public WinnerBallotResponse toResponse() {
+    return WinnerBallotResponse.builder()
         .ballotId(ballotId)
         .participantId(participantId)
         .lotteryId(lotteryId)

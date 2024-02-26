@@ -19,7 +19,7 @@ public class LotteryEntity {
 
   private LocalDate date;
 
-  private boolean finished = false;
+  private boolean finished;
 
   public Lottery toDomain() {
     return Lottery.builder().date(date).id(id).finished(finished).build();

@@ -1,5 +1,6 @@
 package com.bynder.lottery.domain;
 
+import com.bynder.lottery.controller.Response.BallotResponse;
 import com.bynder.lottery.repository.entity.BallotEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,5 +18,13 @@ public class Ballot {
 
   public BallotEntity toEntity() {
     return BallotEntity.builder().id(id).participantId(participantId).lotteryId(lotteryId).build();
+  }
+
+  public BallotResponse toResponse() {
+    return BallotResponse.builder()
+        .id(id)
+        .participantId(participantId)
+        .lotteryId(lotteryId)
+        .build();
   }
 }

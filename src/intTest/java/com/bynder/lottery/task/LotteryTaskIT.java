@@ -15,6 +15,7 @@ import com.bynder.lottery.repository.ParticipantRepository;
 import com.bynder.lottery.repository.WinnerBallotRepository;
 import com.bynder.lottery.repository.entity.LotteryEntity;
 import com.bynder.lottery.repository.jpa.LotteryJpaRepository;
+import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import com.bynder.lottery.util.ParticipantArbitraryProvider;
 import java.time.Instant;
@@ -38,6 +39,8 @@ public class LotteryTaskIT extends BaseIT {
   @Autowired LotteryJpaRepository lotteryJpaRepository;
 
   @Autowired WinnerBallotRepository winnerBallotRepository;
+
+  @Autowired ParticipantJpaRepository participantJpaRepository;
 
   @Autowired LotteryTask lotteryTask;
 
@@ -109,5 +112,33 @@ public class LotteryTaskIT extends BaseIT {
     assertThatThrownBy(() -> lotteryTask.runTask())
         .isInstanceOf(NoSuchElementException.class)
         .hasMessage("No ballots found for lottery with ID: " + lottery.getId());
+  }
+
+  // not expected to happen but to test observability
+  @Test
+  void noParticipantSavedShouldThrowError() {
+    List<Participant> participants =
+        ParticipantArbitraryProvider.arbitraryParticipants().list().ofSize(4).sample().stream()
+            .map(participant -> participantRepository.save(participant))
+            .toList();
+
+    List<Long> participantIds = participants.stream().map(Participant::getId).toList();
+
+    LocalDate today = LocalDate.of(2024, 02, 25);
+    Lottery lottery = lotteryRepository.save(Lottery.builder().date(today).finished(false).build());
+
+    List<Ballot> ballots =
+        ballotRepository.saveAll(
+            BallotArbitrarityProvider.arbitraryBallotsForLotteryAndSetOfUsers(
+                    lottery.getId(), participantIds)
+                .list()
+                .ofSize(30)
+                .sample());
+
+    participantJpaRepository.deleteAll();
+
+    assertThatThrownBy(() -> lotteryTask.runTask())
+        .isInstanceOf(RuntimeException.class)
+        .hasMessage("Participant not found event tho ballot was registered");
   }
 }

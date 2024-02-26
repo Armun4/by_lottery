@@ -25,7 +25,7 @@ public class LotteryTask {
   @Scheduled(cron = "0 0 0 * * *")
   void runTask() {
 
-    Lottery currentLottery = lotteryService.getCurrent();
+    Lottery currentLottery = lotteryService.getLotteryAtMidnight();
     lotteryService.closeCurrentAndCreateNext(currentLottery);
 
     List<Ballot> ballots = ballotService.getAllBallotsForLottery(currentLottery.getId());
@@ -44,7 +44,12 @@ public class LotteryTask {
 
   private WinnerBallot getWinnerBallot(Lottery currentLottery, Ballot winner) {
 
-    String participantName = participantRepository.get(winner.getParticipantId()).get().getName();
+    String participantName =
+        participantRepository
+            .get(winner.getParticipantId())
+            .orElseThrow(
+                () -> new RuntimeException("Participant not found event tho ballot was registered"))
+            .getName();
 
     return WinnerBallot.builder()
         .ballotId(winner.getId())

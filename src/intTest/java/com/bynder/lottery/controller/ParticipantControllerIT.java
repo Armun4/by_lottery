@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.bynder.lottery.BaseIT;
+import com.bynder.lottery.controller.Response.ParticipantResponse;
 import com.bynder.lottery.domain.Participant;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,10 @@ public class ParticipantControllerIT extends BaseIT {
                           "email": "johndoe@example.com"
                         }\s""";
 
-    Participant expected =
-        Participant.builder().name("John Doe").email("johndoe@example.com").build();
+    ParticipantResponse expected =
+        ParticipantResponse.builder().name("John Doe").email("johndoe@example.com").build();
 
-    Participant result =
+    ParticipantResponse result =
         given()
             .port(port)
             .contentType(ContentType.JSON)
@@ -34,7 +35,7 @@ public class ParticipantControllerIT extends BaseIT {
             .statusCode(200)
             .extract()
             .response()
-            .as(Participant.class);
+            .as(ParticipantResponse.class);
 
     assertThat(result).usingRecursiveComparison().ignoringFields("id").isEqualTo(expected);
   }

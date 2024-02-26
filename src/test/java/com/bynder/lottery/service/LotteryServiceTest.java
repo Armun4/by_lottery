@@ -51,7 +51,7 @@ class LotteryServiceTest {
   }
 
   @Test
-  void canGetCurrent() {
+  void canGetCurrentAtMidnight() {
 
     Lottery currentLottery = LotteryArbitraryProvider.arbitraryLottery().sample();
     LocalDate today = currentLottery.getDate();
@@ -62,7 +62,7 @@ class LotteryServiceTest {
     LocalDate todayMinus1 = today.minusDays(1);
     when(lotteryRepository.getCurrentLottery(todayMinus1)).thenReturn(Optional.of(currentLottery));
 
-    service.getCurrent();
+    service.getLotteryAtMidnight();
 
     verify(lotteryRepository, Mockito.times(1)).getCurrentLottery(todayMinus1);
   }

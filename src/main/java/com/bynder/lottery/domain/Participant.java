@@ -1,5 +1,6 @@
 package com.bynder.lottery.domain;
 
+import com.bynder.lottery.controller.Response.ParticipantResponse;
 import com.bynder.lottery.repository.entity.ParticipantEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +17,10 @@ public class Participant {
 
   public ParticipantEntity toEntity() {
     return ParticipantEntity.builder().id(id).name(name).email(email).build();
+  }
+
+  public ParticipantResponse toResponse() {
+
+    return ParticipantResponse.builder().email(email).name(name).build();
   }
 }

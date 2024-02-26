@@ -28,7 +28,7 @@ public class LotteryService {
     lotteryRepository.save(nextLottery);
   }
 
-  public Lottery getCurrent() {
+  public Lottery getLotteryAtMidnight() {
 
     // Task runs at 00:00, minus 5 minutes to make sure it picks up the current lottery even tho is
     // already the next day

@@ -1,5 +1,7 @@
 package com.bynder.lottery.controller;
 
+import com.bynder.lottery.controller.Response.BallotResponse;
+import com.bynder.lottery.controller.Response.WinnerBallotResponse;
 import com.bynder.lottery.controller.request.BallotSubmitRequest;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.domain.WinnerBallot;
@@ -20,29 +22,27 @@ public class BallotController {
   private final Clock clock;
 
   @PostMapping("/v1/ballot/submit")
-  ResponseEntity<List<Ballot>> submitBallots(@RequestBody BallotSubmitRequest request) {
+  ResponseEntity<List<BallotResponse>> submitBallots(@RequestBody BallotSubmitRequest request) {
 
     validateRequest(request);
 
-    List<Ballot> result =
-        ballotService.saveBallots(request.getParticipantId(), request.getAmount());
+    List<BallotResponse> result =
+        ballotService.saveBallots(request.getParticipantId(), request.getAmount()).stream()
+            .map(Ballot::toResponse)
+            .toList();
 
     return ResponseEntity.ok(result);
   }
 
   @GetMapping("/v1/ballot/winner")
-  ResponseEntity<WinnerBallot> getWinningBallot(
+  ResponseEntity<WinnerBallotResponse> getWinningBallot(
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-    LocalDate today = LocalDate.ofInstant(clock.instant(), clock.getZone());
-    if (date.isAfter(today)) {
-      // If the specified date is after today, return a bad request response
-      return ResponseEntity.badRequest().build();
-    }
+    validateRequest(date);
 
     WinnerBallot winnerBallot = ballotService.getWinner(date);
 
-    return ResponseEntity.ok(winnerBallot);
+    return ResponseEntity.ok(winnerBallot.toResponse());
   }
 
   private void validateRequest(BallotSubmitRequest request) {
@@ -63,8 +63,8 @@ public class BallotController {
   private void validateRequest(LocalDate date) {
     LocalDate today = LocalDate.ofInstant(clock.instant(), clock.getZone());
     if (date.isAfter(today)) {
-      // If the specified date is after today, return a bad request response
-      throw new IllegalArgumentException("The specified date cannot be after today");
+      throw new IllegalArgumentException(
+          "Invalid request, it is not possible to retrieve winner for future Lotteries");
     }
   }
 }
