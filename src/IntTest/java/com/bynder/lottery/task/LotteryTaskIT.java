@@ -23,7 +23,6 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +41,10 @@ public class LotteryTaskIT extends BaseIT {
 
   @Autowired LotteryTask lotteryTask;
 
-
   @BeforeEach
-  void setUp(){
+  void setUp() {
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
     when(clock.instant()).thenReturn(Instant.parse("2024-02-26T00:00:00Z"));
-
-
   }
 
   @Test
@@ -97,26 +93,21 @@ public class LotteryTaskIT extends BaseIT {
     assertThat(nexTLottery.get().getFinished()).isFalse();
   }
 
-
-
-
   @Test
   void noBallotsSavedShouldThrowError() {
 
     List<Participant> participants =
-            ParticipantArbitraryProvider.arbitraryParticipants().list().ofSize(4).sample().stream()
-                    .map(participant -> participantRepository.save(participant))
-                    .toList();
+        ParticipantArbitraryProvider.arbitraryParticipants().list().ofSize(4).sample().stream()
+            .map(participant -> participantRepository.save(participant))
+            .toList();
 
     List<Long> participantIds = participants.stream().map(Participant::getId).toList();
 
     LocalDate today = LocalDate.of(2024, 02, 25);
     Lottery lottery = lotteryRepository.save(Lottery.builder().date(today).finished(false).build());
 
-
-    assertThatThrownBy(() -> lotteryTask.runTask()).isInstanceOf(NoSuchElementException.class)
-            .hasMessage("No ballots found for lottery with ID: " + lottery.getId());
-
-
+    assertThatThrownBy(() -> lotteryTask.runTask())
+        .isInstanceOf(NoSuchElementException.class)
+        .hasMessage("No ballots found for lottery with ID: " + lottery.getId());
   }
 }

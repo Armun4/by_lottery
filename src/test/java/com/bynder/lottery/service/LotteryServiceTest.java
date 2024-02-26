@@ -11,7 +11,7 @@ import static org.testcontainers.shaded.com.google.common.base.Verify.verify;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.repository.LotteryRepository;
 import com.bynder.lottery.util.LotteryArbitraryProvider;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class LotteryServiceTest {
 
   @Mock private LotteryRepository lotteryRepository;
+  @Mock Clock clock;
 
   @InjectMocks private LotteryService service;
 
@@ -51,11 +52,18 @@ class LotteryServiceTest {
 
   @Test
   void canGetCurrent() {
+
     Lottery currentLottery = LotteryArbitraryProvider.arbitraryLottery().sample();
-    when(lotteryRepository.getCurrentLottery()).thenReturn(Optional.of(currentLottery));
+    LocalDate today = currentLottery.getDate();
+
+    Mockito.when(clock.instant()).thenReturn(today.atStartOfDay(ZoneOffset.UTC).toInstant());
+    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
+    LocalDate todayMinus1 = today.minusDays(1);
+    when(lotteryRepository.getCurrentLottery(todayMinus1)).thenReturn(Optional.of(currentLottery));
 
     service.getCurrent();
 
-    verify(lotteryRepository, Mockito.times(1)).getCurrentLottery();
+    verify(lotteryRepository, Mockito.times(1)).getCurrentLottery(todayMinus1);
   }
 }

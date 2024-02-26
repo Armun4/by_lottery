@@ -65,7 +65,7 @@ class LotteryRepositoryIT extends BaseIT {
     lotteryRepository.save(alreadyClosed);
     Lottery savedCurrent = lotteryRepository.save(currentLottery);
 
-    Optional<Lottery> retrievedCurrent = lotteryRepository.getCurrentLottery();
+    Optional<Lottery> retrievedCurrent = lotteryRepository.getCurrentLottery(currentStartTime);
 
     assertThat(retrievedCurrent).isPresent();
     assertThat(retrievedCurrent.get()).usingRecursiveComparison().isEqualTo(savedCurrent);
