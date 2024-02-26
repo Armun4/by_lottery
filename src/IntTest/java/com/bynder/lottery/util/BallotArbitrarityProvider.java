@@ -46,14 +46,15 @@ public class BallotArbitrarityProvider {
     Arbitrary<LocalDate> dates = dates().atTheEarliest(LocalDate.of(2010, 1, 1));
 
     return Combinators.combine(participantIds, lotteryIds, ballotIds, dates, names)
-            .as((participantId, lotteryId, ballotId, date, name) ->
-                    WinnerBallot.builder()
-                            .ballotId(ballotId)
-                            .participantId(participantId)
-                            .lotteryId(lotteryId)
-                            .winningDate(date)
-                            .participantName(name)
-                            .build());
+        .as(
+            (participantId, lotteryId, ballotId, date, name) ->
+                WinnerBallot.builder()
+                    .ballotId(ballotId)
+                    .participantId(participantId)
+                    .lotteryId(lotteryId)
+                    .winningDate(date)
+                    .participantName(name)
+                    .build());
   }
 
   public static Arbitrary<Ballot> arbitraryBallotsForLotteryAndSetOfUsers(

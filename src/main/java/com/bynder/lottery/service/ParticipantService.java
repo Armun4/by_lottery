@@ -15,5 +15,4 @@ public class ParticipantService {
 
     return participantRepository.save(participant);
   }
-
 }

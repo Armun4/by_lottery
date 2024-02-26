@@ -15,6 +15,8 @@ import com.bynder.lottery.repository.WinnerBallotRepository;
 import com.bynder.lottery.util.BallotArbitrarityProvider;
 import com.bynder.lottery.util.LotteryArbitraryProvider;
 import com.bynder.lottery.util.ParticipantArbitraryProvider;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -38,6 +40,8 @@ class BallotServiceTest {
 
   @Mock WinnerBallotRepository winnerBallotRepository;
 
+  @Mock Clock clock;
+
   ArgumentCaptor<List<Ballot>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
   @InjectMocks BallotService ballotService;
@@ -51,7 +55,14 @@ class BallotServiceTest {
 
     Lottery lottery = LotteryArbitraryProvider.arbitraryLottery().sample();
 
-    Mockito.when(lotteryRepository.getCurrentLottery()).thenReturn(Optional.of(lottery));
+    LocalDate today = lottery.getDate();
+    ZonedDateTime midnightToday = today.atStartOfDay(ZoneOffset.UTC);
+    Instant instantOfToday = midnightToday.toInstant();
+
+    Mockito.when(clock.instant()).thenReturn(instantOfToday);
+    Mockito.when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+
+    Mockito.when(lotteryRepository.getCurrentLottery(today)).thenReturn(Optional.of(lottery));
 
     int amount = 3;
     ballotService.saveBallots(participant.getId(), amount);
@@ -67,7 +78,7 @@ class BallotServiceTest {
             .toList();
 
     verify(participantRepository).get(participant.getId());
-    verify(lotteryRepository).getCurrentLottery();
+    verify(lotteryRepository).getCurrentLottery(today);
     verify(ballotRepository).saveAll(argumentCaptor.capture());
 
     List<Ballot> capturedArguments = argumentCaptor.getValue();
@@ -97,6 +108,11 @@ class BallotServiceTest {
     Participant participant = ParticipantArbitraryProvider.arbitraryParticipants().sample();
     Mockito.when(participantRepository.get(participant.getId()))
         .thenReturn(Optional.of(participant));
+
+    Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
+
+    when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
+    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
 
     assertThatThrownBy(
             () -> {
