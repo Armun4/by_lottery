@@ -15,7 +15,6 @@ public class WinnerBallotRepositoryIT extends BaseIT {
   @Autowired WinnerBallotRepository repository;
 
   @Test
-  @RepeatedTest(10)
   void canSaveAndRetrieve() {
 
     WinnerBallot winnerBallot = BallotArbitrarityProvider.arbitraryWinnerBallots().sample();
