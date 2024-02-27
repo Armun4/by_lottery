@@ -2,6 +2,7 @@ package com.bynder.lottery.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +43,8 @@ class BallotServiceTest {
 
   @Mock Clock clock;
 
-  ArgumentCaptor<List<Ballot>> argumentCaptor = ArgumentCaptor.forClass(List.class);
+  ArgumentCaptor<List<Ballot>> ballotArgumentCaptor = ArgumentCaptor.forClass(List.class);
+  ArgumentCaptor<Lottery> lotteryArgumentCaptor = ArgumentCaptor.forClass(Lottery.class);
 
   @InjectMocks BallotService ballotService;
 
@@ -79,9 +81,9 @@ class BallotServiceTest {
 
     verify(participantRepository).get(participant.getId());
     verify(lotteryRepository).getCurrentLottery(today);
-    verify(ballotRepository).saveAll(argumentCaptor.capture());
+    verify(ballotRepository).saveAll(ballotArgumentCaptor.capture());
 
-    List<Ballot> capturedArguments = argumentCaptor.getValue();
+    List<Ballot> capturedArguments = ballotArgumentCaptor.getValue();
 
     assertThat(capturedArguments).usingRecursiveComparison().isEqualTo(expected);
   }
@@ -111,17 +113,42 @@ class BallotServiceTest {
 
     Instant currentStartTime = Instant.parse("2024-01-24T00:00:00Z");
 
-    when(clock.instant()).thenReturn(currentStartTime.plus(5, ChronoUnit.HOURS));
-    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    long lotteryId = Arbitraries.longs().sample();
 
-    assertThatThrownBy(
-            () -> {
-              ballotService.saveBallots(participant.getId(), 1);
-            })
-        // Specify the expected exception type
-        .isInstanceOf(RuntimeException.class)
-        // Optionally, assert the message or other details of the exception
-        .hasMessage("No current lottery found. Please check again later.");
+    LocalDate today = LocalDate.ofInstant(currentStartTime, ZoneId.systemDefault());
+
+    Lottery expectedLottery = Lottery.builder().date(today).finished(false).id(lotteryId).build();
+
+    int amountToAdd = 5;
+    when(clock.instant()).thenReturn(currentStartTime.plus(amountToAdd, ChronoUnit.HOURS));
+    when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    when(lotteryRepository.save(any(Lottery.class))).thenReturn(expectedLottery);
+
+    ballotService.saveBallots(participant.getId(), amountToAdd);
+
+    List<Ballot> expected =
+        Stream.generate(
+                () ->
+                    Ballot.builder()
+                        .lotteryId(lotteryId)
+                        .participantId(participant.getId())
+                        .build())
+            .limit(amountToAdd)
+            .toList();
+
+    verify(lotteryRepository).getCurrentLottery(today);
+    verify(lotteryRepository).save(lotteryArgumentCaptor.capture());
+    verify(ballotRepository).saveAll(ballotArgumentCaptor.capture());
+
+    List<Ballot> capturedArguments = ballotArgumentCaptor.getValue();
+    Lottery capturedLottery = lotteryArgumentCaptor.getValue();
+
+    assertThat(capturedArguments).usingRecursiveComparison().isEqualTo(expected);
+
+    assertThat(capturedLottery)
+        .usingRecursiveComparison()
+        .ignoringFields("id")
+        .isEqualTo(expectedLottery);
   }
 
   @Test
