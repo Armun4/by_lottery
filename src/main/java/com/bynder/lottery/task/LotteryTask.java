@@ -3,9 +3,9 @@ package com.bynder.lottery.task;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.domain.WinnerBallot;
-import com.bynder.lottery.repository.ParticipantRepository;
 import com.bynder.lottery.service.BallotService;
 import com.bynder.lottery.service.LotteryService;
+import com.bynder.lottery.service.ParticipantService;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -20,7 +20,7 @@ public class LotteryTask {
   private final BallotService ballotService;
   private final LotteryService lotteryService;
 
-  private final ParticipantRepository participantRepository;
+  private final ParticipantService participantService;
 
   @Scheduled(cron = "0 0 0 * * *")
   public void runTask() {
@@ -46,8 +46,8 @@ public class LotteryTask {
   private WinnerBallot getWinnerBallot(Lottery currentLottery, Ballot winner) {
 
     String participantName =
-        participantRepository
-            .get(winner.getParticipantId())
+        participantService
+            .getParticipant(winner.getParticipantId())
             .orElseThrow(
                 () -> new RuntimeException("Participant not found event tho ballot was registered"))
             .getName();
