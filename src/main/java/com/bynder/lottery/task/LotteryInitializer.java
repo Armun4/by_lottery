@@ -16,7 +16,7 @@ public class LotteryInitializer {
   private final Clock clock;
 
   @PostConstruct
-  private void createLotteryIfNeeded() {
+  void createLotteryIfNeeded() {
     LocalDate today = LocalDate.ofInstant(clock.instant(), clock.getZone());
 
     if (lotteryRepository.getCurrentLottery(today).isEmpty()) {

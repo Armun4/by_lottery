@@ -17,4 +17,12 @@ public class LotteryArbitraryProvider {
     return Combinators.combine(dates, ids)
         .as((date, id) -> Lottery.builder().id(id).date(date).build());
   }
+
+
+  public static Arbitrary<Lottery> arbitraryLotteryForDate(LocalDate date) {
+    Arbitrary<Long> ids = Arbitraries.longs().between(1, 10000);
+
+    return ids.map(id ->
+      Lottery.builder().id(id).date(date).build());
+  }
 }
