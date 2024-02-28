@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:13  # Specify PostgreSQL version 13
+    ports:
+      - "5432:5432"  # Map container port 5432 to host port 5432
+    environment:
+      POSTGRES_USER: bynder_lottery
+      POSTGRES_PASSWORD: bynder_lottery
+

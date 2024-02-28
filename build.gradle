@@ -3,6 +3,8 @@ plugins {
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version "6.23.0"
+    id "org.flywaydb.flyway" version "6.2.3"
+
 }
 
 group = 'com.bynder.lottery'
@@ -26,6 +28,10 @@ ext {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.3'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.3'
+    implementation 'org.postgresql:postgresql:42.7.2'
+    implementation("org.flywaydb:flyway-core:10.0.1")
+    implementation("org.flywaydb:flyway-database-postgresql:10.0.1")
+
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.3'
     testImplementation 'org.testcontainers:junit-jupiter'
@@ -39,6 +45,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
+
 
 tasks.named('test') {
     useJUnitPlatform()
@@ -103,4 +110,24 @@ spotless {
     }
 }
 
+task bootRunWithDockerCompose(dependsOn: 'dockerComposeUp') {
+    doLast {
+        tasks.bootRun.execute()
+    }
+}
 
+task dockerComposeUp(type: Exec) {
+    commandLine 'docker-compose', 'up', '-d'
+}
+
+bootRun.dependsOn dockerComposeUp
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/postgres'
+    user = 'bynder_lottery'
+    password = 'bynder_lottery'
+    driver = 'org.postgresql.Driver'
+    locations = ['filesystem:./sql'] // Path to your migration scripts
+    baselineOnMigrate = true
+    baselineVersion = '1'
+}
