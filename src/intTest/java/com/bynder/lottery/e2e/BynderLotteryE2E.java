@@ -6,9 +6,9 @@ import static org.mockito.Mockito.when;
 
 import com.bynder.lottery.BaseIT;
 import com.bynder.lottery.config.TestConfig;
-import com.bynder.lottery.controller.Response.BallotResponse;
-import com.bynder.lottery.controller.Response.ParticipantResponse;
-import com.bynder.lottery.controller.Response.WinnerBallotResponse;
+import com.bynder.lottery.controller.response.BallotResponse;
+import com.bynder.lottery.controller.response.ParticipantResponse;
+import com.bynder.lottery.controller.response.WinnerBallotResponse;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.domain.Participant;

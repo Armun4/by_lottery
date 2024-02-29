@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.bynder.lottery.BaseIT;
-import com.bynder.lottery.controller.Response.BallotResponse;
-import com.bynder.lottery.controller.Response.WinnerBallotResponse;
+import com.bynder.lottery.controller.response.BallotResponse;
+import com.bynder.lottery.controller.response.WinnerBallotResponse;
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.domain.Participant;
 import com.bynder.lottery.domain.WinnerBallot;

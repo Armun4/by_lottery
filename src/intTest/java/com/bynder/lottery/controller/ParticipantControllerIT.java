@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.bynder.lottery.BaseIT;
-import com.bynder.lottery.controller.Response.ParticipantResponse;
+import com.bynder.lottery.controller.response.ParticipantResponse;
 import com.bynder.lottery.domain.Participant;
 import com.bynder.lottery.repository.jpa.ParticipantJpaRepository;
 import io.restassured.http.ContentType;

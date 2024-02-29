@@ -1,4 +1,4 @@
-package com.bynder.lottery.controller.Response;
+package com.bynder.lottery.controller.response;
 
 import java.time.LocalDate;
 import lombok.Builder;

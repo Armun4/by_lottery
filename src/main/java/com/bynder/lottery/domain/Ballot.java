@@ -1,6 +1,6 @@
 package com.bynder.lottery.domain;
 
-import com.bynder.lottery.controller.Response.BallotResponse;
+import com.bynder.lottery.controller.response.BallotResponse;
 import com.bynder.lottery.repository.entity.BallotEntity;
 import lombok.Builder;
 import lombok.Getter;

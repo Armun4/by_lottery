@@ -1,6 +1,6 @@
 package com.bynder.lottery.domain;
 
-import com.bynder.lottery.controller.Response.WinnerBallotResponse;
+import com.bynder.lottery.controller.response.WinnerBallotResponse;
 import com.bynder.lottery.repository.entity.WinnerBallotEntity;
 import java.time.LocalDate;
 import lombok.Builder;
