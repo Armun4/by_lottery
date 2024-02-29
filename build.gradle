@@ -3,8 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version "6.23.0"
-    id "org.flywaydb.flyway" version "6.2.3"
-
 }
 
 group = 'com.bynder.lottery'
@@ -110,11 +108,6 @@ spotless {
     }
 }
 
-task bootRunWithDockerCompose(dependsOn: 'dockerComposeUp') {
-    doLast {
-        tasks.bootRun.execute()
-    }
-}
 
 task dockerComposeUp(type: Exec) {
     commandLine 'docker-compose', 'up', '-d'
@@ -122,12 +115,4 @@ task dockerComposeUp(type: Exec) {
 
 bootRun.dependsOn dockerComposeUp
 
-flyway {
-    url = 'jdbc:postgresql://localhost:5432/postgres'
-    user = 'bynder_lottery'
-    password = 'bynder_lottery'
-    driver = 'org.postgresql.Driver'
-    locations = ['filesystem:./sql'] // Path to your migration scripts
-    baselineOnMigrate = true
-    baselineVersion = '1'
-}
+
