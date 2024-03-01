@@ -16,10 +16,6 @@ public class TestConfig {
 
   public static final Instant todayMidDayInstant = Instant.parse("2024-01-24T10:00:00Z");
 
-  //  Clock getClock() {
-  //    return Mockito.mock(Clock.class);
-  //  }
-
   @Bean
   LotteryInitializer lotteryInitializer(
       @Autowired LotteryRepository lotteryRepository, @Autowired Clock clock) {
