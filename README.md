@@ -53,7 +53,6 @@ The application consists of three main endpoints:
 ###  `/v1/participant/register`
 - **HTTP Method**: `POST`
 - **Description**: Registers a new participant.
-- **Authentication**: Requires authentication (e.g., JWT token).
 
 #### Request
 - **Body**: `ParticipantRequest` JSON object containing participant persona information.
