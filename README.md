@@ -61,7 +61,7 @@ The application consists of three main endpoints:
     "name": string,
     "email": string
   }
-  
+
 #### Response
 - **Status Codes**:
   - `200 OK`: Successfully registered the participant.
@@ -74,7 +74,7 @@ The application consists of three main endpoints:
     "name": string,
     "email": string
   }
-  
+
 
 ### `/v1/ballot/submit`
 - **HTTP Method**: `POST`
@@ -87,7 +87,7 @@ The application consists of three main endpoints:
     "participantId": integer,
     "amount": integer
   }
-  
+
 ####  Response
 - **Status Codes**:
     - `200 OK`: Successfully submitted ballots.

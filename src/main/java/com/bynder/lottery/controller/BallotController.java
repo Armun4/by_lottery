@@ -1,8 +1,8 @@
 package com.bynder.lottery.controller;
 
+import com.bynder.lottery.controller.request.BallotSubmitRequest;
 import com.bynder.lottery.controller.response.BallotResponse;
 import com.bynder.lottery.controller.response.WinnerBallotResponse;
-import com.bynder.lottery.controller.request.BallotSubmitRequest;
 import com.bynder.lottery.domain.Ballot;
 import com.bynder.lottery.domain.WinnerBallot;
 import com.bynder.lottery.service.BallotService;

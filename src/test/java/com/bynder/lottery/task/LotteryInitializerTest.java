@@ -1,10 +1,16 @@
 package com.bynder.lottery.task;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.*;
+
 import com.bynder.lottery.domain.Lottery;
 import com.bynder.lottery.repository.LotteryRepository;
-import com.bynder.lottery.repository.entity.LotteryEntity;
-import com.bynder.lottery.task.LotteryInitializer;
 import com.bynder.lottery.util.LotteryArbitraryProvider;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,67 +19,51 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class LotteryInitializerTest {
 
+  ArgumentCaptor<Lottery> lotteryCaptor = ArgumentCaptor.forClass(Lottery.class);
 
+  @Mock private LotteryRepository lotteryRepository;
 
-    ArgumentCaptor<Lottery> lotteryCaptor = ArgumentCaptor.forClass(Lottery.class);
+  @Mock private Clock clock;
 
-    @Mock
-    private LotteryRepository lotteryRepository;
+  @InjectMocks private LotteryInitializer lotteryInitializer;
 
-    @Mock
-    private Clock clock;
+  @BeforeEach
+  void setUp() {
+    when(clock.instant()).thenReturn(Instant.now());
+    when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+  }
 
-    @InjectMocks
-    private LotteryInitializer lotteryInitializer;
+  @Test
+  void createLotteryIfNeeded_lotteryExists() {
+    LocalDate today = LocalDate.now();
+    Lottery lottery = LotteryArbitraryProvider.arbitraryLottery().sample();
+    when(lotteryRepository.getCurrentLottery(today)).thenReturn(Optional.of(lottery));
 
-    @BeforeEach
-    void setUp() {
-        when(clock.instant()).thenReturn(Instant.now());
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
-    }
+    lotteryInitializer.createLotteryIfNeeded();
 
-    @Test
-    void createLotteryIfNeeded_lotteryExists() {
-        LocalDate today = LocalDate.now();
-        Lottery lottery = LotteryArbitraryProvider.arbitraryLottery().sample();
-        when(lotteryRepository.getCurrentLottery(today)).thenReturn(Optional.of(lottery));
+    verify(lotteryRepository).getCurrentLottery(today);
+    verify(lotteryRepository, times(0)).save(any());
+  }
 
-        lotteryInitializer.createLotteryIfNeeded();
+  @Test
+  void createLotteryIfNeeded_lotteryDoesNotExist() {
 
-        verify(lotteryRepository).getCurrentLottery(today);
-        verify(lotteryRepository, times(0)).save(any());
-    }
+    LocalDate today = LocalDate.now();
+    Lottery lottery = Lottery.builder().date(today).build();
 
-    @Test
-    void createLotteryIfNeeded_lotteryDoesNotExist() {
+    when(lotteryRepository.getCurrentLottery(today)).thenReturn(Optional.empty());
+    when(lotteryRepository.save(any())).thenReturn(lottery);
 
-        LocalDate today = LocalDate.now();
-        Lottery lottery = Lottery.builder().date(today).build();
+    lotteryInitializer.createLotteryIfNeeded();
 
-        when(lotteryRepository.getCurrentLottery(today)).thenReturn(Optional.empty());
-        when(lotteryRepository.save(any())).thenReturn(lottery);
+    verify(lotteryRepository).getCurrentLottery(today);
+    verify(lotteryRepository).save(lotteryCaptor.capture());
 
+    Lottery capturedArguments = lotteryCaptor.getValue();
 
-        lotteryInitializer.createLotteryIfNeeded();
-
-        verify(lotteryRepository).getCurrentLottery(today);
-        verify(lotteryRepository).save(lotteryCaptor.capture());
-
-
-        Lottery capturedArguments = lotteryCaptor.getValue();
-
-        assertThat(capturedArguments).usingRecursiveComparison().isEqualTo(lottery);
-    }
+    assertThat(capturedArguments).usingRecursiveComparison().isEqualTo(lottery);
+  }
 }

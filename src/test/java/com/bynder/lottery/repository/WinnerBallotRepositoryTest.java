@@ -26,8 +26,7 @@ class WinnerBallotRepositoryTest {
 
   @Mock WinnerBallotJpaRepository jpaRepository;
 
-  @InjectMocks
-  WinnerBallotRepository winnerBallotRepository;
+  @InjectMocks WinnerBallotRepository winnerBallotRepository;
 
   @Test
   void canSaveWinner() {

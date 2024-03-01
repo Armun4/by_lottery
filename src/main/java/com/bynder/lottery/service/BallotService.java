@@ -28,6 +28,7 @@ public class BallotService {
   private final Clock clock;
 
   public List<Ballot> saveBallots(long participantId, int amount) {
+
     Participant participant =
         participantRepository
             .get(participantId)

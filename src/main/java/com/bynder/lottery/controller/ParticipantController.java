@@ -2,8 +2,8 @@ package com.bynder.lottery.controller;
 
 import static com.bynder.lottery.controller.util.EmailValidator.isEmailValid;
 
-import com.bynder.lottery.controller.response.ParticipantResponse;
 import com.bynder.lottery.controller.request.ParticipantRequest;
+import com.bynder.lottery.controller.response.ParticipantResponse;
 import com.bynder.lottery.domain.Participant;
 import com.bynder.lottery.service.ParticipantService;
 import lombok.RequiredArgsConstructor;

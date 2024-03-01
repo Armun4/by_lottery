@@ -7,7 +7,6 @@ import com.bynder.lottery.task.LotteryInitializer;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +16,13 @@ public class TestConfig {
 
   public static final Instant todayMidDayInstant = Instant.parse("2024-01-24T10:00:00Z");
 
-  @Bean
-  Clock getClock() {
-    return Mockito.mock(Clock.class);
-  }
+  //  Clock getClock() {
+  //    return Mockito.mock(Clock.class);
+  //  }
 
   @Bean
   LotteryInitializer lotteryInitializer(
-      @Autowired LotteryRepository lotteryRepository, Clock clock) {
+      @Autowired LotteryRepository lotteryRepository, @Autowired Clock clock) {
 
     when(clock.instant()).thenReturn(todayMidDayInstant);
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
